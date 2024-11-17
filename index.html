@@ -132,6 +132,7 @@
             }
         }
 
+        // Form submission handler
         function handleFormSubmit() {
             var formdata = $('#myForm').serializeArray();
             if (myfile.data) {
@@ -139,8 +140,8 @@
             }
 
             // Replace with your actual Google Apps Script URL
-            var scriptUrl = "https://script.google.com/macros/s/AKfycbzAXBgUkTyAAMQ7-5GBMVYdnejw6Qz7qqOb5q0Ibt4W9NpOdBd8HXqhmoyumoHeFGNa/exec"; // Use your Apps Script URL here
-            
+            var scriptUrl = "https://script.google.com/macros/s/AKfycbzAXBgUkTyAAMQ7-5GBMVYdnejw6Qz7qqOb5q0Ibt4W9NpOdBd8HXqhmoyumoHeFGNa/exec";
+
             $.ajax({
                 url: scriptUrl,
                 type: "POST",
