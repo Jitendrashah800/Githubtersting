@@ -23,10 +23,7 @@
                             <option value="">---Select Shop---</option>
                             <option value="Ayush Cyber Cafe">Ayush Cyber Cafe</option>
                             <option value="Karuna Cosmetic and Gift Place">Karuna Cosmetic and Gift Place</option>
-                            <option value="Ayush Wedding Cards and Videography">Ayush Wedding Cards and Videography</option>
-                            <option value="Ayushi Ladies Garments Outlet">Ayushi Ladies Garments Outlet</option>
-                            <option value="Diwali Crackers- seasonal">Diwali Crackers- seasonal</option>
-                            <option value="from">from</option>
+                            <!-- Add other shops here -->
                         </select>
                     </div>
 
@@ -70,6 +67,7 @@
     <script>
         var myfile = {};
 
+        // File upload handling
         $('#file').change(function() {
             var file = $('#file')[0].files[0];
             if (file) {
@@ -82,25 +80,34 @@
             }
         });
 
+        // Shop selection change event
         $('#shopDetails').change(function() {
             var shop = $(this).val();
+            // Call the Apps Script function to fetch categories and subcategories
             google.script.run.withSuccessHandler(updateCategories).getShopDetails(shop);
         });
 
         function updateCategories(shopInfo) {
+            // Update categories dropdown
             $('#category').empty().append('<option value="">---Select Category---</option>');
             shopInfo.categories.forEach(function(category) {
                 $('#category').append('<option value="' + category + '">' + category + '</option>');
             });
+
+            // Reset subcategories
             $('#subcategory').empty().append('<option value="">---Select Sub-Category---</option>');
+
+            // Show file upload if "Purchase" category is selected
             $('#fileUploadDiv').hide();
         }
 
+        // Category selection change event
         $('#category').change(function() {
             var category = $(this).val();
             var shop = $('#shopDetails').val();
             google.script.run.withSuccessHandler(updateSubcategories).getShopDetails(shop);
 
+            // Show file upload for "Purchase" category
             if (category === 'Purchase') {
                 $('#fileUploadDiv').show();
             } else {
@@ -111,6 +118,7 @@
         function updateSubcategories(shopInfo) {
             var category = $('#category').val();
             $('#subcategory').empty().append('<option value="">---Select Sub-Category---</option>');
+
             if (shopInfo.subcategories[category]) {
                 shopInfo.subcategories[category].forEach(function(subcategory) {
                     $('#subcategory').append('<option value="' + subcategory + '">' + subcategory + '</option>');
@@ -124,8 +132,8 @@
                 formdata.push({ name: 'myfile', value: myfile.data });
             }
 
-            // Replace this with your Web App URL
-            var scriptUrl = "https://script.google.com/macros/s/AKfycbzAXBgUkTyAAMQ7-5GBMVYdnejw6Qz7qqOb5q0Ibt4W9NpOdBd8HXqhmoyumoHeFGNa/exec"; // Replace this URL with your Apps Script Web App URL
+            // Replace with your actual Google Apps Script URL
+            var scriptUrl = "https://script.google.com/macros/s/AKfycbzAXBgUkTyAAMQ7-5GBMVYdnejw6Qz7qqOb5q0Ibt4W9NpOdBd8HXqhmoyumoHeFGNa/exec"; // Use your Apps Script URL here
             
             $.ajax({
                 url: scriptUrl,
