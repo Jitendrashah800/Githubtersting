@@ -83,22 +83,28 @@
         // Shop selection change event
         $('#shopDetails').change(function() {
             var shop = $(this).val();
-            // Call the Apps Script function to fetch categories and subcategories
-            google.script.run.withSuccessHandler(updateCategories).getShopDetails(shop);
+            if (shop) {
+                // Call the Apps Script function to fetch categories and subcategories
+                google.script.run.withSuccessHandler(updateCategories).getShopDetails(shop);
+            } else {
+                // Reset categories and subcategories if no shop is selected
+                $('#category').empty().append('<option value="">---Select Category---</option>');
+                $('#subcategory').empty().append('<option value="">---Select Sub-Category---</option>');
+            }
         });
 
         function updateCategories(shopInfo) {
-            // Update categories dropdown
+            // Clear and update categories dropdown
             $('#category').empty().append('<option value="">---Select Category---</option>');
-            shopInfo.categories.forEach(function(category) {
-                $('#category').append('<option value="' + category + '">' + category + '</option>');
-            });
+            if (shopInfo && shopInfo.categories) {
+                shopInfo.categories.forEach(function(category) {
+                    $('#category').append('<option value="' + category + '">' + category + '</option>');
+                });
+            }
 
-            // Reset subcategories
+            // Clear subcategories dropdown
             $('#subcategory').empty().append('<option value="">---Select Sub-Category---</option>');
-
-            // Show file upload if "Purchase" category is selected
-            $('#fileUploadDiv').hide();
+            $('#fileUploadDiv').hide(); // Hide file upload by default
         }
 
         // Category selection change event
@@ -107,7 +113,7 @@
             var shop = $('#shopDetails').val();
             google.script.run.withSuccessHandler(updateSubcategories).getShopDetails(shop);
 
-            // Show file upload for "Purchase" category
+            // Show file upload if "Purchase" category is selected
             if (category === 'Purchase') {
                 $('#fileUploadDiv').show();
             } else {
@@ -119,7 +125,7 @@
             var category = $('#category').val();
             $('#subcategory').empty().append('<option value="">---Select Sub-Category---</option>');
 
-            if (shopInfo.subcategories[category]) {
+            if (shopInfo.subcategories && shopInfo.subcategories[category]) {
                 shopInfo.subcategories[category].forEach(function(subcategory) {
                     $('#subcategory').append('<option value="' + subcategory + '">' + subcategory + '</option>');
                 });
